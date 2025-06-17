@@ -1,2 +1,16 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+* text=auto eol=lf
+
+*.blade.php diff=php
+*.blade diff=php
+*.css diff=php
+*.html diff=php
+*.php diff=php
+
+*.md diff=markdown
+
+*.css linguist-language=php
+*.html linguist-language=php
+*.js linguist-language=php
+
+/.github export-ignore
+README.md export-ignore
