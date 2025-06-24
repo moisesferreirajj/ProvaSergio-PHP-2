@@ -11,8 +11,34 @@ if ($_SESSION['perfil'] != 1) {
 // Inicializa variáveis
 $funcionario = null;
 
+// Processa alteração do funcionário
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_funcionario'])) {
+    // Recebe os dados do formulário
+    $id = $_POST['id_funcionario'];
+    $nome = trim($_POST['nome_funcionario']);
+    $email = trim($_POST['email']);
+    $endereco = trim($_POST['endereco']);
+    $telefone = trim($_POST['telefone']);
+
+    // Atualiza no banco
+    $sql = "UPDATE funcionario SET nome_funcionario = :nome, email = :email, endereco = :endereco, telefone = :telefone WHERE id_funcionario = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':nome', $nome);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':endereco', $endereco);
+    $stmt->bindParam(':telefone', $telefone);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Funcionário alterado com sucesso!'); window.location.href='alterar_funcionario.php';</script>";
+        exit();
+    } else {
+        echo "<script>alert('Erro ao alterar funcionário!');</script>";
+    }
+}
+
 // Se o formulário for enviado, busca o funcionário pelo ID ou nome
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['busca_funcionario'])) {
     if (!empty($_POST['busca_funcionario'])) {
         $busca = trim($_POST['busca_funcionario']);
 
@@ -100,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
 
                     <!-- Formulário de alteração -->
-                    <form action="processa_alteracao_funcionario.php" method="POST" class="row g-3">
+                    <form action="" method="POST" class="row g-3">
                         <input type="hidden" name="id_funcionario" value="<?= htmlspecialchars($funcionario['id_funcionario']) ?>">
 
                         <div class="col-md-6">
